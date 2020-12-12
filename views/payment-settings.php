@@ -111,6 +111,119 @@ use Pronamic\WordPress\Pay\Extensions\FormidableForms\PaymentMethodSelectFieldTy
 
 		</td>
 	</tr>
+	
+	<tr>
+		<th scope="col">
+			<?php esc_html_e( 'Customer Name', 'pronamic_ideal' ); ?>
+		</th>
+		<td>
+			<?php
+
+			$current = $instance->post_content['pronamic_pay_name_field'];
+
+			printf(
+				'<select name="%s">',
+				esc_attr( $this->get_field_name( 'pronamic_pay_name_field' ) )
+			);
+
+			$options = array(
+				'' => __( '— Select Field —', 'pronamic_ideal' ),
+			);
+
+			foreach ( $form_fields as $field ) {
+				$options[ $field->id ] = FrmAppHelper::truncate( $field->name, 50, 1 );
+			}
+
+			foreach ( $options as $value => $label ) {
+				printf(
+					'<option value="%s" %s>%s</option>',
+					esc_attr( $value ),
+					selected( $current, $value, false ),
+					esc_html( $label )
+				);
+			}
+
+			echo '</select>';
+
+			?>
+		</td>
+	</tr>
+	
+	<tr>
+		<th scope="col">
+			<?php esc_html_e( 'Phone', 'pronamic_ideal' ); ?>
+		</th>
+		<td>
+			<?php
+
+			$current = $instance->post_content['pronamic_pay_phone_field'];
+
+			printf(
+				'<select name="%s">',
+				esc_attr( $this->get_field_name( 'pronamic_pay_phone_field' ) )
+			);
+
+			$options = array(
+				'' => __( '— Select Field —', 'pronamic_ideal' ),
+			);
+
+			foreach ( $form_fields as $field ) {
+				$options[ $field->id ] = FrmAppHelper::truncate( $field->name, 50, 1 );
+			}
+
+			foreach ( $options as $value => $label ) {
+				printf(
+					'<option value="%s" %s>%s</option>',
+					esc_attr( $value ),
+					selected( $current, $value, false ),
+					esc_html( $label )
+				);
+			}
+
+			echo '</select>';
+
+			?>
+		</td>
+	</tr>
+	
+	<tr>
+		<th scope="col">
+			<?php esc_html_e( 'Email', 'pronamic_ideal' ); ?>
+		</th>
+		<td>
+			<?php
+
+			$current = $instance->post_content['pronamic_pay_email_field'];
+
+			printf(
+				'<select name="%s">',
+				esc_attr( $this->get_field_name( 'pronamic_pay_email_field' ) )
+			);
+
+			$options = array(
+				'' => __( '— Select Field —', 'pronamic_ideal' ),
+			);
+
+			foreach ( $form_fields as $field ) {
+				$options[ $field->id ] = FrmAppHelper::truncate( $field->name, 50, 1 );
+			}
+
+			foreach ( $options as $value => $label ) {
+				printf(
+					'<option value="%s" %s>%s</option>',
+					esc_attr( $value ),
+					selected( $current, $value, false ),
+					esc_html( $label )
+				);
+			}
+
+			echo '</select>';
+
+			?>
+		</td>
+	</tr>
+	
+	
 	<tr>
 		<th scope="col">
 			<?php esc_html_e( 'Notifications', 'pronamic_ideal' ); ?>

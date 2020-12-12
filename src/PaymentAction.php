@@ -32,7 +32,7 @@ class PaymentAction extends FrmFormAction {
 	public function __construct() {
 		parent::__construct(
 			self::SLUG,
-			__( 'Pronamic Pay', 'pronamic_ideal' ),
+			__( 'Knit Pay', 'pronamic_ideal' ),
 			array(
 				// @link https://github.com/wp-premium/formidable/blob/2.0.21/classes/views/frm-form-actions/form_action.php#L14
 				'classes'  => 'pronamic-pay-formidable-icon',

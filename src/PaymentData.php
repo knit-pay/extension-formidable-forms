@@ -136,7 +136,7 @@ class PaymentData extends Pay_PaymentData {
 
 		// Check if there was a replacement to make sure the description has a dynamic part.
 		if ( $description_template === $description ) {
-			$description .= $this->entry_id;
+			$description .= ' ' . $this->entry_id;
 		}
 
 		return $description;
@@ -213,7 +213,7 @@ class PaymentData extends Pay_PaymentData {
 
 		// Check empty currency.
 		if ( empty( $currency ) ) {
-			$currency = 'EUR';
+			$currency = 'INR';
 		}
 
 		return $currency;
@@ -225,6 +225,24 @@ class PaymentData extends Pay_PaymentData {
 	 * @return string
 	 */
 	public function get_email() {
+		return $this->get_field_value( 'pronamic_pay_email_field' );
+	}
+
+	/**
+	 * Get first name.
+	 *
+	 * @return string|null
+	 */
+	public function get_first_name() {
+		return $this->get_field_value( 'pronamic_pay_name_field' );
+	}
+
+	/**
+	 * Get last name.
+	 *
+	 * @return string|null
+	 */
+	public function get_last_name() {
 		return '';
 	}
 
@@ -234,7 +252,7 @@ class PaymentData extends Pay_PaymentData {
 	 * @return string
 	 */
 	public function get_customer_name() {
-		return '';
+		return $this->get_first_name() . ' ' . $this->get_last_name();
 	}
 
 	/**
@@ -262,6 +280,15 @@ class PaymentData extends Pay_PaymentData {
 	 */
 	public function get_zip() {
 		return '';
+	}
+
+	/**
+	 * Get telephone number.
+	 *
+	 * @return string|null
+	 */
+	public function get_telephone_number() {
+		return $this->get_field_value( 'pronamic_pay_phone_field' );
 	}
 
 	/**
@@ -346,5 +373,18 @@ class PaymentData extends Pay_PaymentData {
 		}
 
 		return $bank;
+	}
+
+	private function get_field_value( $field_name ) {
+
+		$value = '';
+
+		$field = $this->action->post_content[ $field_name ];
+
+		if ( ! empty( $field ) && isset( $this->entry->metas[ $field ] ) ) {
+			$value = $this->entry->metas[ $field ];
+		}
+
+		return $value;
 	}
 }

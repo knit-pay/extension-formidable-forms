@@ -92,6 +92,7 @@ class Extension extends AbstractPluginIntegration {
 		add_filter( 'frm_twilio_action_options', array( $this, 'add_trigger_to_action' ) );
 		add_filter( 'frm_mailchimp_action_options', array( $this, 'add_trigger_to_action' ) );
 		add_filter( 'frm_register_action_options', array( $this, 'add_payment_trigger_to_register_user_action' ) );
+		add_filter( 'frm_action_groups', array( $this, 'add_action_groups' ) );
 
 		// Field types.
 		$this->field_type_bank_select = new BankSelectFieldType();
@@ -435,13 +436,27 @@ class Extension extends AbstractPluginIntegration {
 	 * @since unreleased
 	 */
 	public static function add_payment_trigger( $triggers ) {
-		$triggers['pronamic-pay-pending']   = __( 'Pronamic payment pending', 'pronamic_ideal' );
-		$triggers['pronamic-pay-success']   = __( 'Pronamic payment success', 'pronamic_ideal' );
-		$triggers['pronamic-pay-cancelled'] = __( 'Pronamic payment cancelled', 'pronamic_ideal' );
-		$triggers['pronamic-pay-expired']   = __( 'Pronamic payment expired', 'pronamic_ideal' );
-		$triggers['pronamic-pay-failed']    = __( 'Pronamic payment failed', 'pronamic_ideal' );
+		$triggers['pronamic-pay-pending']   = __( 'Knit Pay payment pending', 'pronamic_ideal' );
+		$triggers['pronamic-pay-success']   = __( 'Knit Pay payment success', 'pronamic_ideal' );
+		$triggers['pronamic-pay-cancelled'] = __( 'Knit Pay payment cancelled', 'pronamic_ideal' );
+		$triggers['pronamic-pay-expired']   = __( 'Knit Pay payment expired', 'pronamic_ideal' );
+		$triggers['pronamic-pay-failed']    = __( 'Knit Pay payment failed', 'pronamic_ideal' );
 
 		return $triggers;
+	}
+
+	/**
+	 * Add Knit Pay in Payment Action Group.
+	 *
+	 * @param array $groups
+	 *
+	 * @return array
+	 *
+	 * @since unreleased
+	 */
+	public static function add_action_groups( $groups ) {
+		array_unshift( $groups['payment']['actions'], 'pronamic_pay' );
+		return $groups;
 	}
 
 	/**
