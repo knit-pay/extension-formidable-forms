@@ -390,6 +390,12 @@ class Extension extends AbstractPluginIntegration {
 			)
 		);
 
+		// Customer.
+		$payment->set_customer( FormidableFormsHelper::get_customer( $this->action, $entry ) );
+
+		// Address.
+		$payment->set_billing_address( FormidableFormsHelper::get_address( $this->action, $entry ) );
+
 		// Currency.
 		$currency = Currency::get_instance( FormidableFormsHelper::get_currency_from_settings() );
 

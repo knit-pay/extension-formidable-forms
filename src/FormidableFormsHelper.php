@@ -10,6 +10,11 @@
 
 namespace Pronamic\WordPress\Pay\Extensions\FormidableForms;
 
+use Pronamic\WordPress\Pay\Address;
+use Pronamic\WordPress\Pay\AddressHelper;
+use Pronamic\WordPress\Pay\ContactName;
+use Pronamic\WordPress\Pay\ContactNameHelper;
+use Pronamic\WordPress\Pay\CustomerHelper;
 use FrmField;
 use FrmFieldsHelper;
 use FrmProAppHelper;
@@ -40,7 +45,7 @@ class FormidableFormsHelper {
 
 		// Check empty currency.
 		if ( empty( $currency ) ) {
-			$currency = 'EUR';
+			$currency = 'INR';
 		}
 
 		return $currency;
@@ -75,7 +80,7 @@ class FormidableFormsHelper {
 
 		// Check if there was a replacement to make sure the description has a dynamic part.
 		if ( $description_template === $description ) {
-			$description .= $entry_id;
+			$description .= ' ' . $entry_id;
 		}
 
 		return $description;
@@ -170,5 +175,67 @@ class FormidableFormsHelper {
 		}
 
 		return null;
+	}
+
+	private static function get_field_value( $action, $entry, $field_name ) {
+
+		$value = '';
+
+		$field = $action->post_content[ $field_name ];
+
+		if ( ! empty( $field ) && isset( $entry->metas[ $field ] ) ) {
+			$value = $entry->metas[ $field ];
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Get customer from user data.
+	 */
+	public static function get_customer( $action, $entry ) {
+		return CustomerHelper::from_array(
+			array(
+				'name'    => self::get_name( $action, $entry ),
+				'email'   => self::get_field_value( $action, $entry, 'pronamic_pay_email_field' ),
+				'phone'   => self::get_field_value( $action, $entry, 'pronamic_pay_phone_field' ),
+				'user_id' => null,
+			)
+		);
+	}
+
+	/**
+	 * Get name from user data.
+	 *
+	 * @return ContactName|null
+	 */
+	public static function get_name( $action, $entry ) {
+		$name       = self::get_field_value( $action, $entry, 'pronamic_pay_name_field' );
+		$name       = trim( $name );
+		$last_name  = ( strpos( $name, ' ' ) === false ) ? '' : preg_replace( '#.*\s([\w-]*)$#', '$1', $name );
+		$first_name = trim( preg_replace( '#' . preg_quote( $last_name, '#' ) . '#', '', $name ) );
+
+		return ContactNameHelper::from_array(
+			array(
+				'first_name' => $first_name,
+				'last_name'  => $last_name,
+			)
+		);
+	}
+
+	/**
+	 * Get address from user info.
+	 *
+	 * @return Address|null
+	 */
+	public static function get_address( $action, $entry ) {
+
+		return AddressHelper::from_array(
+			array(
+				'name'  => self::get_name( $action, $entry ),
+				'email' => self::get_field_value( $action, $entry, 'pronamic_pay_email_field' ),
+				'phone' => self::get_field_value( $action, $entry, 'pronamic_pay_phone_field' ),
+			)
+		);
 	}
 }
