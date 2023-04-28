@@ -8,7 +8,7 @@ use FrmFormAction;
 /**
  * Title: Formidable Forms payment action
  * Description:
- * Copyright: 2005-2022 Pronamic
+ * Copyright: 2005-2023 Pronamic
  * Company: Pronamic
  *
  * @author  Remco Tolsma
@@ -57,7 +57,7 @@ class PaymentAction extends FrmFormAction {
 	public function form( $instance, $args = [] ) {
 		$form_fields = $this->get_field_options( $args['form']->id );
 
-		include \dirname( __FILE__ ) . '/../views/payment-settings.php';
+		include __DIR__ . '/../views/payment-settings.php';
 	}
 
 	/**

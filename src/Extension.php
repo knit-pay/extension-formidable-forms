@@ -21,7 +21,7 @@ use Pronamic\WordPress\Pay\Plugin;
 /**
  * Title: Formidable Forms extension
  * Description:
- * Copyright: 2005-2022 Pronamic
+ * Copyright: 2005-2023 Pronamic
  * Company: Pronamic
  *
  * @author  Remco Tolsma
@@ -110,8 +110,11 @@ class Extension extends AbstractPluginIntegration {
 	public function admin_enqueue_scripts() {
 		$screen = get_current_screen();
 
-		$in_form_editor = ( 'toplevel_page_formidable' === $screen->id && 'edit' === filter_input( INPUT_GET, 'frm_action', FILTER_SANITIZE_STRING ) );
-		$in_settings    = ( 'toplevel_page_formidable' === $screen->id && 'settings' === filter_input( INPUT_GET, 'frm_action', FILTER_SANITIZE_STRING ) );
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce is not necessary because this parameter does not trigger an action
+		$action = \array_key_exists( 'frm_action', $_GET ) ? \sanitize_text_field( \wp_unslash( $_GET['frm_action'] ) ) : '';
+
+		$in_form_editor = ( 'toplevel_page_formidable' === $screen->id && 'edit' === $action );
+		$in_settings    = ( 'toplevel_page_formidable' === $screen->id && 'settings' === $action );
 
 		if ( ! $in_form_editor && ! $in_settings ) {
 			return;
@@ -121,14 +124,14 @@ class Extension extends AbstractPluginIntegration {
 
 		wp_register_style(
 			'pronamic-pay-formidable-forms',
-			plugins_url( 'css/admin' . $min . '.css', dirname( __FILE__ ) ),
+			plugins_url( 'css/admin' . $min . '.css', __DIR__ ),
 			[],
 			'1.0.0'
 		);
 
 		wp_register_script(
 			'pronamic-pay-formidable-forms',
-			plugins_url( 'js/admin' . $min . '.js', dirname( __FILE__ ) ),
+			plugins_url( 'js/admin' . $min . '.js', __DIR__ ),
 			[ 'jquery' ],
 			'1.0.0',
 			true

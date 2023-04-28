@@ -7,6 +7,53 @@ This projects adheres to [Semantic Versioning](http://semver.org/) and [Keep a C
 ## [Unreleased][unreleased]
 -
 
+## [4.3.3] - 2023-03-27
+
+### Commits
+
+- Set Composer type to WordPress plugin. ([055a8c2](https://github.com/pronamic/wp-pronamic-pay-formidable-forms/commit/055a8c2cffe9dc420daba731273f97cdf313d450))
+- Updated .gitattributes ([d25a8c0](https://github.com/pronamic/wp-pronamic-pay-formidable-forms/commit/d25a8c09e41d6523a226b1193a17c33a31db1611))
+- Requires PHP: 7.4. ([fd2345b](https://github.com/pronamic/wp-pronamic-pay-formidable-forms/commit/fd2345b57450d97a345825af1af97583d2d55924))
+
+Full set of changes: [`4.3.2...4.3.3`][4.3.3]
+
+[4.3.3]: https://github.com/pronamic/wp-pronamic-pay-formidable-forms/compare/v4.3.2...v4.3.3
+
+## [4.3.2] - 2023-01-31
+### Composer
+
+- Changed `php` from `>=8.0` to `>=7.4`.
+Full set of changes: [`4.3.1...4.3.2`][4.3.2]
+
+[4.3.2]: https://github.com/pronamic/wp-pronamic-pay-formidable-forms/compare/v4.3.1...v4.3.2
+
+## [4.3.1] - 2023-01-18
+
+### Commits
+
+- Fixed "Undefined array key" notices. ([4677a8d](https://github.com/pronamic/wp-pronamic-pay-formidable-forms/commit/4677a8d51a7640c08d9d921a1b01eb1316a8ddc9))
+- Happy 2023. ([69a4bcc](https://github.com/pronamic/wp-pronamic-pay-formidable-forms/commit/69a4bccf474eeb7fb7930f70381cba8b253497ef))
+
+Full set of changes: [`4.3.0...4.3.1`][4.3.1]
+
+[4.3.1]: https://github.com/pronamic/wp-pronamic-pay-formidable-forms/compare/v4.3.0...v4.3.1
+
+## [4.3.0] - 2022-12-23
+
+### Commits
+
+- Added https://github.com/WordPress/wp-plugin-dependencies. ([e35ee01](https://github.com/pronamic/wp-pronamic-pay-formidable-forms/commit/e35ee019d9b6bf821330a7c77930b557caedaa2a))
+- No longer use `filter_` functions and deprecated `FILTER_SANITIZE_STRING`. ([58cb81a](https://github.com/pronamic/wp-pronamic-pay-formidable-forms/commit/58cb81a9d7a881d9a15ee6f361485f114cc6f1c8))
+
+### Composer
+
+- Changed `php` from `>=5.6.20` to `>=8.0`.
+- Changed `wp-pay/core` from `^4.4` to `v4.6.0`.
+	Release notes: https://github.com/pronamic/wp-pay-core/releases/tag/v4.2.1
+Full set of changes: [`4.2.1...4.3.0`][4.3.0]
+
+[4.3.0]: https://github.com/pronamic/wp-pronamic-pay-formidable-forms/compare/v4.2.1...v4.3.0
+
 ## [4.2.1] - 2022-09-27
 - Update to `wp-pay/core` version `^4.4`.
 
