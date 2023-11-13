@@ -16,287 +16,236 @@ use Pronamic\WordPress\Pay\Plugin;
  * @since 1.0.0
  */
 
-$field_amount = '';
+$callback_text_field = function ( $field ) use ( $instance, $payment_action ) {
+	$id = $field['id'];
 
-if ( \array_key_exists( 'pronamic_pay_amount_field', $instance->post_content ) ) {
-	$field_amount = $instance->post_content['pronamic_pay_amount_field'];
-}
+	$current = '';
 
-$field_method = '';
+	if ( \array_key_exists( $id, $instance->post_content ) ) {
+		$current = $instance->post_content[ $id ];
+	}
 
-if ( \array_key_exists( 'pronamic_pay_payment_method_field', $instance->post_content ) ) {
-	$field_method = $instance->post_content['pronamic_pay_payment_method_field'];
-}
+	printf(
+		'<input type="text" name="%s" value="%s" class="large-text frm_help" title="" data-original-title="%s" />',
+		esc_attr( $payment_action->get_field_name( $id ) ),
+		esc_attr( $current ),
+		esc_attr( $field['description'] )
+	);
+};
 
-$config_id = 0;
+$callback_field_select_field = function ( $field ) use ( $form_fields, $instance, $payment_action ) {
+	$id = $field['id'];
 
-if ( \array_key_exists( 'pronamic_pay_config_id', $instance->post_content ) ) {
-	$config_id = $instance->post_content['pronamic_pay_config_id'];
-}
+	$current = '';
 
-$transaction_description = '';
+	if ( \array_key_exists( $id, $instance->post_content ) ) {
+		$current = $instance->post_content[ $id ];
+	}
 
-if ( \array_key_exists( 'pronamic_pay_transaction_description', $instance->post_content ) ) {
-	$transaction_description = $instance->post_content['pronamic_pay_transaction_description'];
-}
+	printf(
+		'<select name="%s">',
+		esc_attr( $payment_action->get_field_name( $id ) )
+	);
 
-$delay_notifications = '';
+	$options = [
+		'' => __( 'â€” Select Field â€”', 'pronamic-ideal' ),
+	];
 
-if ( \array_key_exists( 'pronamic_pay_delay_notifications', $instance->post_content ) ) {
-	$delay_notifications = $instance->post_content['pronamic_pay_delay_notifications'];
-}
+	foreach ( $form_fields as $form_field ) {
+		$options[ $form_field->id ] = FrmAppHelper::truncate( $form_field->name, 50, 1 );
+	}
 
-?>
-<table class="form-table">
-	<tr>
-		<th scope="col">
-			<?php esc_html_e( 'Amount', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<?php
+	foreach ( $options as $value => $label ) {
+		printf(
+			'<option value="%s" %s>%s</option>',
+			esc_attr( $value ),
+			selected( $current, $value, false ),
+			esc_html( $label )
+		);
+	}
+
+	echo '</select>';
+};
+
+$fields = [
+	[
+		'id'       => 'pronamic_pay_amount_field',
+		'label'    => __( 'Amount', 'pronamic-ideal' ),
+		'callback' => function ( $field ) use ( $form_fields, $instance, $payment_action ) {
+			$id = $field['id'];
+
+			$current = '';
+
+			if ( \array_key_exists( $id, $instance->post_content ) ) {
+				$current = $instance->post_content[ $id ];
+			}
 
 			printf(
 				'<select name="%s">',
-				esc_attr( $this->get_field_name( 'pronamic_pay_amount_field' ) )
+				esc_attr( $payment_action->get_field_name( $id ) )
 			);
 
 			$options = [
-				'' => __( '— Select Field —', 'pronamic_ideal' ),
+				'' => __( 'â€” Select Field â€”', 'pronamic-ideal' ),
 			];
 
-			foreach ( $form_fields as $field ) {
-				$options[ $field->id ] = FrmAppHelper::truncate( $field->name, 50, 1 );
+			foreach ( $form_fields as $form_field ) {
+				$options[ $form_field->id ] = FrmAppHelper::truncate( $form_field->name, 50, 1 );
 			}
 
 			foreach ( $options as $value => $label ) {
 				printf(
 					'<option value="%s" %s>%s</option>',
 					esc_attr( $value ),
-					selected( $field_amount, $value, false ),
+					selected( $current, $value, false ),
 					esc_html( $label )
 				);
 			}
 
 			echo '</select>';
+		},
+	],
+	[
+		'id'       => 'pronamic_pay_payment_method_field',
+		'label'    => __( 'Payment method', 'pronamic-ideal' ),
+		'callback' => function ( $field ) use ( $form_fields, $instance, $payment_action ) {
+			$id = $field['id'];
 
-			?>
-		</td>
-	</tr>
-	<tr>
-		<th scope="col">
-			<?php esc_html_e( 'Payment method', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<?php
+			$current = '';
+
+			if ( \array_key_exists( $id, $instance->post_content ) ) {
+				$current = $instance->post_content[ $id ];
+			}
 
 			printf(
 				'<select name="%s">',
-				esc_attr( $this->get_field_name( 'pronamic_pay_payment_method_field' ) )
+				esc_attr( $payment_action->get_field_name( $id ) )
 			);
 
 			$options = [
-				'' => __( '— Select Field —', 'pronamic_ideal' ),
+				'' => __( 'â€” Select Field â€”', 'pronamic-ideal' ),
 			];
 
-			foreach ( $form_fields as $field ) {
-				if ( PaymentMethodSelectFieldType::ID !== $field->type ) {
+			foreach ( $form_fields as $form_field ) {
+				if ( PaymentMethodSelectFieldType::ID !== $form_field->type ) {
 					continue;
 				}
 
-				$options[ $field->id ] = FrmAppHelper::truncate( $field->name, 50, 1 );
+				$options[ $form_field->id ] = FrmAppHelper::truncate( $form_field->name, 50, 1 );
 			}
 
 			foreach ( $options as $value => $label ) {
 				printf(
 					'<option value="%s" %s>%s</option>',
 					esc_attr( $value ),
-					selected( $field_method, $value, false ),
+					selected( $current, $value, false ),
 					esc_html( $label )
 				);
 			}
 
 			echo '</select>';
+		},
+	],
+	[
+		'id'       => 'pronamic_pay_config_id',
+		'label'    => __( 'Payment Gateway Configuration', 'pronamic-ideal' ),
+		'callback' => function ( $field ) use ( $instance, $payment_action ) {
+			$id = $field['id'];
 
-			?>
-		</td>
-	</tr>
-	<tr>
-		<th scope="col">
-			<?php \esc_html_e( 'Payment Gateway Configuration', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<?php
+			$current = '';
+
+			if ( \array_key_exists( $id, $instance->post_content ) ) {
+				$current = $instance->post_content[ $id ];
+			}
 
 			\printf(
 				'<select name="%s">',
-				esc_attr( $this->get_field_name( 'pronamic_pay_config_id' ) )
+				esc_attr( $payment_action->get_field_name( $id ) )
 			);
 
 			$options = Plugin::get_config_select_options();
 
-			$options[0] = __( '– Default Gateway –', 'pronamic_ideal' );
+			$options[0] = __( 'â€“ Default Gateway â€“', 'pronamic-ideal' );
 
 			foreach ( $options as $value => $label ) {
 				\printf(
 					'<option value="%s" %s>%s</option>',
 					\esc_attr( $value ),
-					\selected( $config_id, $value, false ),
+					\selected( $current, $value, false ),
 					\esc_html( $label )
 				);
 			}
 
 			echo '</select>';
+		},
+	],
+	[
+		'id'          => 'pronamic_pay_order_id',
+		'label'       => __( 'Order ID', 'pronamic-ideal' ),
+		'description' => __( 'Enter an order ID, you can use Formidable Forms shortcodes.', 'pronamic-ideal' ),
+		'callback'    => $callback_text_field,
+	],
+	[
+		'id'          => 'pronamic_pay_transaction_description',
+		'label'       => __( 'Transaction Description', 'pronamic-ideal' ),
+		'description' => __( 'Enter a transaction description, you can use Formidable Forms shortcodes.', 'pronamic-ideal' ),
+		'callback'    => $callback_text_field,
+	],
+	[
+		'id'       => 'pronamic_pay_name_field',
+		'label'    => __( 'Customer Name', 'pronamic-ideal' ),
+		'callback' => $callback_field_select_field,
+	],
+	[
+		'id'       => 'pronamic_pay_phone_field',
+		'label'    => __( 'Phone', 'pronamic-ideal' ),
+		'callback' => $callback_field_select_field,
+	],
+	[
+		'id'       => 'pronamic_pay_email_field',
+		'label'    => __( 'Email', 'pronamic-ideal' ),
+		'callback' => $callback_field_select_field,
+	],
+	[
+		'id'       => 'pronamic_pay_delay_notifications',
+		'label'    => __( 'Notifications', 'pronamic-ideal' ),
+		'callback' => function ( $field ) use ( $instance, $payment_action ) {
+			$id = $field['id'];
 
-			?>
-		</td>
-	</tr>
-	<tr>
-		<th scope="col">
-			<?php esc_html_e( 'Transaction Description', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<?php
+			$current = '';
 
-			printf(
-				'<input type="text" name="%s" value="%s" class="large-text frm_help" title="" data-original-title="%s" />',
-				esc_attr( $this->get_field_name( 'pronamic_pay_transaction_description' ) ),
-				esc_attr( $transaction_description ),
-				esc_attr__( 'Enter a transaction description, you can use Formidable Forms shortcodes.', 'pronamic_ideal' )
-			);
-
-			?>
-
-		</td>
-	</tr>
-	
-	<tr>
-		<th scope="col">
-			<?php esc_html_e( 'Customer Name', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<?php
-
-			$current = $instance->post_content['pronamic_pay_name_field'];
-
-			printf(
-				'<select name="%s">',
-				esc_attr( $this->get_field_name( 'pronamic_pay_name_field' ) )
-			);
-
-			$options = array(
-				'' => __( '— Select Field —', 'pronamic_ideal' ),
-			);
-
-			foreach ( $form_fields as $field ) {
-				$options[ $field->id ] = FrmAppHelper::truncate( $field->name, 50, 1 );
+			if ( \array_key_exists( $id, $instance->post_content ) ) {
+				$current = $instance->post_content[ $id ];
 			}
-
-			foreach ( $options as $value => $label ) {
-				printf(
-					'<option value="%s" %s>%s</option>',
-					esc_attr( $value ),
-					selected( $current, $value, false ),
-					esc_html( $label )
-				);
-			}
-
-			echo '</select>';
-
-			?>
-		</td>
-	</tr>
-	
-	<tr>
-		<th scope="col">
-			<?php esc_html_e( 'Phone', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<?php
-
-			$current = $instance->post_content['pronamic_pay_phone_field'];
-
-			printf(
-				'<select name="%s">',
-				esc_attr( $this->get_field_name( 'pronamic_pay_phone_field' ) )
-			);
-
-			$options = array(
-				'' => __( '— Select Field —', 'pronamic_ideal' ),
-			);
-
-			foreach ( $form_fields as $field ) {
-				$options[ $field->id ] = FrmAppHelper::truncate( $field->name, 50, 1 );
-			}
-
-			foreach ( $options as $value => $label ) {
-				printf(
-					'<option value="%s" %s>%s</option>',
-					esc_attr( $value ),
-					selected( $current, $value, false ),
-					esc_html( $label )
-				);
-			}
-
-			echo '</select>';
-
-			?>
-		</td>
-	</tr>
-	
-	<tr>
-		<th scope="col">
-			<?php esc_html_e( 'Email', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<?php
-
-			$current = $instance->post_content['pronamic_pay_email_field'];
-
-			printf(
-				'<select name="%s">',
-				esc_attr( $this->get_field_name( 'pronamic_pay_email_field' ) )
-			);
-
-			$options = array(
-				'' => __( '— Select Field —', 'pronamic_ideal' ),
-			);
-
-			foreach ( $form_fields as $field ) {
-				$options[ $field->id ] = FrmAppHelper::truncate( $field->name, 50, 1 );
-			}
-
-			foreach ( $options as $value => $label ) {
-				printf(
-					'<option value="%s" %s>%s</option>',
-					esc_attr( $value ),
-					selected( $current, $value, false ),
-					esc_html( $label )
-				);
-			}
-
-			echo '</select>';
-
-			?>
-		</td>
-	</tr>
-	
-	
-	<tr>
-		<th scope="col">
-			<?php esc_html_e( 'Notifications', 'pronamic_ideal' ); ?>
-		</th>
-		<td>
-			<?php
 
 			printf(
 				'<input type="checkbox" name="%s" title="" %s /> %s',
-				esc_attr( $this->get_field_name( 'pronamic_pay_delay_notifications' ) ),
-				checked( $delay_notifications, 'on', false ),
-				esc_attr__( 'Delay email notifications until payment has been received.', 'pronamic_ideal' )
+				esc_attr( $payment_action->get_field_name( $id ) ),
+				checked( $current, 'on', false ),
+				esc_attr__( 'Delay email notifications until payment has been received.', 'pronamic-ideal' )
 			);
+		},
+	],
+];
 
-			?>
+?>
+<table class="form-table">
 
-		</td>
-	</tr>
+	<?php foreach ( $fields as $field ) : ?>
+
+		<tr>
+			<th scope="row">
+				<?php echo esc_html( $field['label'] ); ?>
+			</th>
+			<td>
+				<?php
+
+				call_user_func( $field['callback'], $field );
+
+				?>
+			</td>
+		</tr>
+
+	<?php endforeach; ?>
+
 </table>
