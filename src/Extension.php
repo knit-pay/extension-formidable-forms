@@ -10,8 +10,6 @@ use FrmFormsHelper;
 use FrmProNotification;
 use FrmRegAppController;
 use FrmRegNotification;
-use Pronamic\WordPress\Money\Currency;
-use Pronamic\WordPress\Money\Money;
 use Pronamic\WordPress\Pay\AbstractPluginIntegration;
 use Pronamic\WordPress\Pay\Core\PaymentMethods;
 use Pronamic\WordPress\Pay\Payments\PaymentStatus;
@@ -44,6 +42,13 @@ class Extension extends AbstractPluginIntegration {
 	 * @since unreleased
 	 */
 	private static $send_email_now = false;
+
+	/**
+	 * Form action.
+	 *
+	 * @var FrmFormAction|null
+	 */
+	private $action;
 
 	/**
 	 * Construct and initializes an Formidable Forms extension object.
@@ -97,10 +102,10 @@ class Extension extends AbstractPluginIntegration {
 		add_filter( 'frm_action_groups', [ $this, 'add_action_groups' ] );
 
 		// Field types.
-		$this->field_type_bank_select = new BankSelectFieldType();
+		new BankSelectFieldType();
 
 		if ( FormidableForms::version_compare( '3.0.0', '>' ) ) {
-			$this->field_type_payment_method_select = new PaymentMethodSelectFieldType();
+			new PaymentMethodSelectFieldType();
 		}
 	}
 
