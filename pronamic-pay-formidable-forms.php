@@ -4,7 +4,7 @@
  * Plugin URI: https://www.pronamic.eu/plugins/pronamic-pay-formidable-forms/
  * Description: Extend the Pronamic Pay plugin with Formidable Forms support to receive payments through a variety of payment providers.
  *
- * Version: 4.4.2
+ * Version: 4.4.3
  * Requires at least: 4.7
  * Requires PHP: 7.4
  *
@@ -22,7 +22,7 @@
  * GitHub URI: https://github.com/pronamic/wp-pronamic-pay-formidable-forms
  *
  * @author    Pronamic <info@pronamic.eu>
- * @copyright 2005-2023 Pronamic
+ * @copyright 2005-2024 Pronamic
  * @license   GPL-3.0-or-later
  * @package   Pronamic\WordPress\Pay\Extensions\FormidableForms
  */
